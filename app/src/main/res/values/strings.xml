@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">MPL_Base</string>
+
+    <string name="is_prime_question">Is the following number a prime number?</string>
+    <string name="back_btn">Back</string>
+    <string name="correct_title">Correct!</string>
+    <string name="wrong_title">Wrong!</string>
+    <string name="answer_text">%d %s a prime number</string>
+    <string name="is_not_text">IS NOT</string>
+    <string name="is_text">IS</string>
+    <string name="channel_name">Notification Channel</string>
+    <string name="channel_description">A channel for delivering local notifications</string>
+    <string name="channel_id">1</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="refresh_btn">REFRESH</string>
+    <string name="true_btn">TRUE</string>
+    <string name="false_btn">FALSE</string>
+
+    <string name="main_title" translatable="false">Here is a randomly generated number</string>
+    <string name="main_btn_notify" translatable="false">Send Notification</string>
+
+    <string name="configure">Configure</string>
+    <string name="app_widget_description">This is an app widget description</string>
+
+
+    <string name="yay">YEAH!!!</string>
+    <string name="nay">Ohh, bummer</string>
+    <string name="appwidget_title">Generate a new number</string>
+</resources>

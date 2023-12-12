@@ -13,6 +13,7 @@ import com.example.mpl_base.activities.MainActivity
  * Implementation of App Widget functionality.
  */
 class MyAppWidget : AppWidgetProvider() {
+
     override fun onReceive(context: Context?, intent: Intent?) {
         val appWidgetId = intent!!.getIntExtra(APP_WIDGET_ID, 0)
 
@@ -50,13 +51,18 @@ internal fun updateAppWidget(
     appWidgetId: Int,
     number: Int
 ) {
-    val widgetText = context.getString(R.string.appwidget_text)
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.my_app_widget)
     views.setTextViewText(R.id.appWidgetTitle, context.getString(R.string.appwidget_title))
     views.setTextViewText(R.id.appWidgetNumber, number.toString())
 
     views.setOnClickPendingIntent(R.id.appWidgetBtn, refreshRandomNumber(context, appWidgetId))
+
+    // Create an Intent to launch MainActivity
+    val intent = Intent(context, MainActivity::class.java)
+    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
+    views.setOnClickPendingIntent(R.id., pendingIntent)
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)

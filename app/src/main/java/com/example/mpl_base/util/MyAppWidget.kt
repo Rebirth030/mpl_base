@@ -5,9 +5,13 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.widget.ImageButton
 import android.widget.RemoteViews
 import com.example.mpl_base.R
+import com.example.mpl_base.activities.FalseActivity
 import com.example.mpl_base.activities.MainActivity
+import com.example.mpl_base.activities.TrueActivity
+import com.example.mpl_base.util.NotificationUtil.Companion.sendNotification
 
 /**
  * Implementation of App Widget functionality.
@@ -22,9 +26,39 @@ class MyAppWidget : AppWidgetProvider() {
                 val number = CalcUtil.rng()
                 updateAppWidget(context!!, AppWidgetManager.getInstance(context), appWidgetId, number)
             }
+            WidgetActionEnum.SYNC.toString() -> {
+                val number = intent.getIntExtra(RANDOM_NUMBER, 0)
+                updateAppWidget(context!!, AppWidgetManager.getInstance(context), appWidgetId, number)
+            }
+            WidgetActionEnum.NOTIFY.toString() -> {
+                val number = intent.getIntExtra(RANDOM_NUMBER, 0)
+                val isPrime = CalcUtil.checkIfPrime(number)
+                val guessIsPrime = intent.getBooleanExtra(GUESS_IS_PRIME, false)
+
+
+                val text = if (isPrime) {
+                    String.format( context!!.getString(R.string.answer_text), number, context.getString(R.string.is_text))
+                } else {
+                    String.format( context!!.getString(R.string.answer_text), number, context.getString(R.string.is_not_text))
+                }
+                if (isPrime == guessIsPrime)
+                {
+                    val trueIntent = Intent(context, TrueActivity::class.java)
+                    trueIntent.putExtra(RANDOM_NUMBER, number)
+                    trueIntent.putExtra(IS_PRIME, isPrime)
+                    sendNotification(context!!, context.getString(R.string.yay), text, R.drawable.ic_launcher_foreground, trueIntent)
+                } else {
+                    val falseIntent = Intent(context, FalseActivity::class.java)
+                    falseIntent.putExtra(RANDOM_NUMBER, number)
+                    falseIntent.putExtra(IS_PRIME, isPrime)
+                    sendNotification(context!!, context.getString(R.string.nay), text, R.drawable.ic_launcher_foreground, falseIntent)
+                }
+            }
         }
+
         super.onReceive(context, intent)
     }
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -36,9 +70,10 @@ class MyAppWidget : AppWidgetProvider() {
         }
     }
 
+
     override fun onEnabled(context: Context) {
-        // Enter relevant functionality for when the first widget is created
     }
+
 
     override fun onDisabled(context: Context) {
         // Enter relevant functionality for when the last widget is disabled
@@ -53,18 +88,19 @@ internal fun updateAppWidget(
 ) {
     // Construct the RemoteViews object
     val views = RemoteViews(context.packageName, R.layout.my_app_widget)
-    views.setTextViewText(R.id.appWidgetTitle, context.getString(R.string.appwidget_title))
+    views.setTextViewText(R.id.isPrimeQuestion, context.getString(R.string.is_prime_question))
     views.setTextViewText(R.id.appWidgetNumber, number.toString())
-
-    views.setOnClickPendingIntent(R.id.appWidgetBtn, refreshRandomNumber(context, appWidgetId))
 
     // Create an Intent to launch MainActivity
     val intent = Intent(context, MainActivity::class.java)
-    val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+    intent.putExtra(RANDOM_NUMBER, number)
+    val pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-    views.setOnClickPendingIntent(R.id., pendingIntent)
+    views.setOnClickPendingIntent(R.id.my_app_widget, pIntent)
+    views.setOnClickPendingIntent(R.id.appWidgetBtn, refreshRandomNumber(context, appWidgetId))
+    views.setOnClickPendingIntent(R.id.btnTrue, notify(context, appWidgetId, number, true))
+    views.setOnClickPendingIntent(R.id.btnFalse, notify(context, appWidgetId, number, false))
 
-    // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
@@ -74,4 +110,18 @@ internal fun refreshRandomNumber(context: Context, appWidgetId: Int) : PendingIn
     intent.flags = Intent.FLAG_RECEIVER_FOREGROUND
     intent.action = WidgetActionEnum.REFRESH.toString()
     return PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+}
+internal fun notify(context: Context, appWidgetId: Int, number: Int, guessIsPrime: Boolean) : PendingIntent{
+    println(guessIsPrime)
+    val intent = Intent(context, MyAppWidget::class.java)
+    intent.putExtra(APP_WIDGET_ID, appWidgetId)
+    intent.putExtra(RANDOM_NUMBER, number)
+    intent.putExtra(GUESS_IS_PRIME, guessIsPrime)
+    intent.flags = Intent.FLAG_RECEIVER_FOREGROUND
+    intent.action = WidgetActionEnum.NOTIFY.toString()
+    return if (guessIsPrime){
+        PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    } else {
+        PendingIntent.getBroadcast(context, -appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
 }

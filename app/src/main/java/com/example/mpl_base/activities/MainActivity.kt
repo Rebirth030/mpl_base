@@ -1,24 +1,19 @@
 package com.example.mpl_base.activities
 
-import android.app.PendingIntent
+
 import android.appwidget.AppWidgetManager
-import android.content.BroadcastReceiver
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.content.ContextCompat.registerReceiver
 import com.example.mpl_base.R
 import com.example.mpl_base.util.APP_WIDGET_ID
 import com.example.mpl_base.util.CalcUtil
 import com.example.mpl_base.util.IS_PRIME
 import com.example.mpl_base.util.MyAppWidget
-import com.example.mpl_base.util.NotificationUtil
 import com.example.mpl_base.util.RANDOM_NUMBER
 import com.example.mpl_base.util.WidgetActionEnum
 

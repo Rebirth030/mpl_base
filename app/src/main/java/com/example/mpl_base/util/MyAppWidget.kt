@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.widget.ImageButton
 import android.widget.RemoteViews
 import com.example.mpl_base.R
 import com.example.mpl_base.activities.FalseActivity
@@ -46,12 +45,12 @@ class MyAppWidget : AppWidgetProvider() {
                     val trueIntent = Intent(context, TrueActivity::class.java)
                     trueIntent.putExtra(RANDOM_NUMBER, number)
                     trueIntent.putExtra(IS_PRIME, isPrime)
-                    sendNotification(context!!, context.getString(R.string.yay), text, R.drawable.ic_launcher_foreground, trueIntent)
+                    sendNotification(context, context.getString(R.string.yay), text, R.drawable.ic_launcher_foreground, trueIntent)
                 } else {
                     val falseIntent = Intent(context, FalseActivity::class.java)
                     falseIntent.putExtra(RANDOM_NUMBER, number)
                     falseIntent.putExtra(IS_PRIME, isPrime)
-                    sendNotification(context!!, context.getString(R.string.nay), text, R.drawable.ic_launcher_foreground, falseIntent)
+                    sendNotification(context, context.getString(R.string.nay), text, R.drawable.ic_launcher_foreground, falseIntent)
                 }
             }
         }

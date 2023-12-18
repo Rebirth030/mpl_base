@@ -17,6 +17,16 @@ import com.example.mpl_base.util.NotificationUtil.Companion.sendNotification
  */
 class MyAppWidget : AppWidgetProvider() {
 
+    /**
+     * Called when the BroadcastReceiver is receiving an Intent broadcast.
+     * On action Refresh: Updates the widget with a new random number
+     * On action Sync: Updates the widget with the number from the intent
+     * On action Notify: Sends a notification with the result of the guess
+     *
+     * @param context The Context in which the receiver is running.
+     * @param intent The Intent being received.
+     *
+     */
     override fun onReceive(context: Context?, intent: Intent?) {
         val appWidgetId = intent!!.getIntExtra(APP_WIDGET_ID, 0)
 
@@ -79,6 +89,18 @@ class MyAppWidget : AppWidgetProvider() {
     }
 }
 
+/**
+ * Updates the widget with the given number.
+ * Sets the listeners for the buttons.
+ * Creates a pending intent to launch MainActivity.
+ * Creates a pending intent to refresh the widget.
+ * Creates a pending intent to notify the user of the result of the guess.
+ *
+ * @param context The Context in which the receiver is running.
+ * @param appWidgetManager The AppWidgetManager instance
+ * @param appWidgetId The id of the widget to update
+ * @param number The number to display
+ */
 internal fun updateAppWidget(
     context: Context,
     appWidgetManager: AppWidgetManager,
@@ -103,6 +125,12 @@ internal fun updateAppWidget(
     appWidgetManager.updateAppWidget(appWidgetId, views)
 }
 
+/**
+ * Creates a pending intent to refresh the widget.
+ * @param context The Context in which the receiver is running.
+ * @param appWidgetId The id of the widget to update
+ * @return The pending intent
+ */
 internal fun refreshRandomNumber(context: Context, appWidgetId: Int) : PendingIntent{
     val intent = Intent(context, MyAppWidget::class.java)
     intent.putExtra(APP_WIDGET_ID, appWidgetId)
@@ -110,6 +138,15 @@ internal fun refreshRandomNumber(context: Context, appWidgetId: Int) : PendingIn
     intent.action = WidgetActionEnum.REFRESH.toString()
     return PendingIntent.getBroadcast(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 }
+
+/**
+ * Creates a pending intent to notify the user of the result of the guess.
+ * @param context The Context in which the receiver is running.
+ * @param appWidgetId The id of the widget to update
+ * @param number The number to display
+ * @param guessIsPrime The guess
+ * @return The pending intent
+ */
 internal fun notify(context: Context, appWidgetId: Int, number: Int, guessIsPrime: Boolean) : PendingIntent{
     println(guessIsPrime)
     val intent = Intent(context, MyAppWidget::class.java)

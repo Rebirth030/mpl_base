@@ -17,6 +17,7 @@ import com.example.mpl_base.util.MyAppWidget
 import com.example.mpl_base.util.RANDOM_NUMBER
 import com.example.mpl_base.util.WidgetActionEnum
 
+
 class MainActivity : AppCompatActivity()
 {
     private lateinit var randomNumberTv: TextView
@@ -32,6 +33,9 @@ class MainActivity : AppCompatActivity()
         setUI()
     }
 
+    /**
+     * Sets the UI elements and their listeners
+     */
     private fun setUI(){
         randomNumberTv = findViewById(R.id.main_random_number)
         randomizeBtn = findViewById(R.id.main_btn_randomize)
@@ -54,6 +58,10 @@ class MainActivity : AppCompatActivity()
         }
     }
 
+    /**
+     * Handles the logic for the true and false buttons
+     * @param trueOrFalse true if the true button was pressed, false if the false button was pressed
+     */
     private fun onKlick(trueOrFalse : Boolean){
         val number = randomNumberTv.text.toString().toInt()
         val isPrime = CalcUtil.checkIfPrime(number)
@@ -74,6 +82,9 @@ class MainActivity : AppCompatActivity()
         }
     }
 
+    /**
+     * Updates all the widgets with the current random number
+     */
     private fun updateWidget() {
         for (widget in AppWidgetManager.getInstance(this).getAppWidgetIds(
             ComponentName(this, MyAppWidget::class.java)
@@ -86,6 +97,9 @@ class MainActivity : AppCompatActivity()
         }
     }
 
+    /**
+     * Updates the random number
+     */
     private fun updateRandomNumber(){
         val randomNumber = CalcUtil.rng()
         randomNumberTv.text = randomNumber.toString()
